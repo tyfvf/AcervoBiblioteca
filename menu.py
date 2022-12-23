@@ -5,8 +5,9 @@ from datetime import datetime
 from usuario import Usuario
 from livro import Livro
 from emprestimo import Emprestimo
+from db import Database
 
-class Menu():
+class Menu(Database):
 
     def cadastrar_usuario(self):
         self.cadastrar_usuario_top_level = CTkToplevel(self.root)
@@ -20,16 +21,33 @@ class Menu():
         self.entry_nome_usuario = CTkEntry(self.cadastrar_usuario_top_level, font=('Arial', 12))
         self.entry_nome_usuario.place(relx=0.15, rely=0.25)
 
-        self.bt_cadastrar_usuario = CTkButton(self.cadastrar_usuario_top_level, text='Cadastrar', font=('Arial', 12))
+        self.bt_cadastrar_usuario = CTkButton(self.cadastrar_usuario_top_level, text='Cadastrar', font=('Arial', 12), command=self.novo_usuario)
         self.bt_cadastrar_usuario.place(relx=0.15, rely=0.45)
 
 
-    def listar_usuarios(usuarios):
-        if len(usuarios) == 0:
-            print('Nenhum usuário cadastrado ainda')
-        else:
-            for u in usuarios:
-                print(u)
+    def listar_usuarios(self):
+        self.listar_usuarios_top_level = CTkToplevel(self.root)
+        self.listar_usuarios_top_level.title('Listar usuários')
+        self.listar_usuarios_top_level.geometry('400x500')
+        self.listar_usuarios_top_level.resizable(False, False)
+        self.listar_usuarios_top_level.focus_force()
+
+        self.tree_usuarios = ttk.Treeview(self.listar_usuarios_top_level, height=3, columns=('col1', 'col2'))
+        self.tree_usuarios.heading('#0', text='')
+        self.tree_usuarios.heading('#1', text='Id')
+        self.tree_usuarios.heading('#2', text='Nome')
+
+        self.tree_usuarios.column('#0', width=1, stretch=NO)
+        self.tree_usuarios.column('#1', width=100)
+        self.tree_usuarios.column('#2', width=400)
+
+        self.tree_usuarios.place(relx=0.02, rely=0.02, relwidth=0.96, relheight=0.96)
+
+        self.scroll_usuarios = CTkScrollbar(self.listar_usuarios_top_level, orientation=VERTICAL, command=self.tree_usuarios.yview)
+        self.tree_usuarios.config(yscrollcommand=self.scroll_usuarios.set)
+        self.scroll_usuarios.place(relx=0.96, rely=0.02, relwidth=0.03, relheight=0.96)
+
+        self.mostrar_lista(self.tree_usuarios)
 
 
     def cadastrar_livros(livros):

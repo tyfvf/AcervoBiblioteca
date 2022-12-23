@@ -9,6 +9,7 @@ class App(Menu):
         set_appearance_mode('dark')
         self.root = CTk()
         self.tela()
+        self.tables()
         self.menu()
         self.root.mainloop()
         
@@ -26,7 +27,7 @@ class App(Menu):
         self.bt_cadastro_usuario = CTkButton(self.root, text='Cadastrar usuário', font=('Arial', 14), width=250, command=self.cadastrar_usuario)
         self.bt_cadastro_usuario.place(relx=0.39, rely=0.2)
 
-        self.bt_listar_usuario = CTkButton(self.root, text='Listar usuários', font=('Arial', 14), width=250)
+        self.bt_listar_usuario = CTkButton(self.root, text='Listar usuários', font=('Arial', 14), width=250, command=self.listar_usuarios)
         self.bt_listar_usuario.place(relx=0.39, rely=0.3)
 
         self.bt_cadastro_livro = CTkButton(self.root, text='Cadastrar livro', font=('Arial', 14), width=250)
