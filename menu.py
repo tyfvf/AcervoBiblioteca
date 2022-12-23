@@ -47,21 +47,50 @@ class Menu(Database):
         self.tree_usuarios.config(yscrollcommand=self.scroll_usuarios.set)
         self.scroll_usuarios.place(relx=0.96, rely=0.02, relwidth=0.03, relheight=0.96)
 
-        self.mostrar_lista(self.tree_usuarios)
+        self.mostrar_lista(self.tree_usuarios, 'usuario')
 
 
-    def cadastrar_livros(livros):
-        nome = input('Qual o nome do livro? ')
-        livros.append(Livro(len(livros), nome))
-        print('Livro cadastrado com sucesso!')
+    def cadastrar_livro(self):
+        self.cadastrar_livro_top_level = CTkToplevel(self.root)
+        self.cadastrar_livro_top_level.title('Cadastrar livro')
+        self.cadastrar_livro_top_level.resizable(False, False)
+        self.cadastrar_livro_top_level.focus_force()
+
+        self.lb_nome_livro = CTkLabel(self.cadastrar_livro_top_level, text='Nome', font=('Arial', 16))
+        self.lb_nome_livro.place(relx=0.4, rely=0.1)
+
+        self.entry_nome_livro = CTkEntry(self.cadastrar_livro_top_level, font=('Arial', 12))
+        self.entry_nome_livro.place(relx=0.15, rely=0.25)
+
+        self.bt_cadastrar_livro = CTkButton(self.cadastrar_livro_top_level, text='Cadastrar', font=('Arial', 12), command=self.novo_livro)
+        self.bt_cadastrar_livro.place(relx=0.15, rely=0.45)
 
 
-    def listar_livros(livros):
-        if len(livros) == 0:
-            print('Nenhum livro cadastrado ainda')
-        else:
-            for l in livros:
-                print(l)
+    def listar_livros(self):
+        self.listar_livros_top_level = CTkToplevel(self.root)
+        self.listar_livros_top_level.title('Listar livros')
+        self.listar_livros_top_level.geometry('400x500')
+        self.listar_livros_top_level.resizable(False, False)
+        self.listar_livros_top_level.focus_force()
+
+        self.tree_livros = ttk.Treeview(self.listar_livros_top_level, height=3, columns=('col1', 'col2', 'col3'))
+        self.tree_livros.heading('#0', text='')
+        self.tree_livros.heading('#1', text='Id')
+        self.tree_livros.heading('#2', text='Nome')
+        self.tree_livros.heading('#3', text='Emprestado')
+
+        self.tree_livros.column('#0', width=1, stretch=NO)
+        self.tree_livros.column('#1', width=5)
+        self.tree_livros.column('#2', width=100)
+        self.tree_livros.column('#3', width=5)
+
+        self.tree_livros.place(relx=0.02, rely=0.02, relwidth=0.96, relheight=0.96)
+
+        self.scroll_livros = CTkScrollbar(self.listar_livros_top_level, orientation=VERTICAL, command=self.tree_livros.yview)
+        self.tree_livros.config(yscrollcommand=self.scroll_livros.set)
+        self.scroll_livros.place(relx=0.96, rely=0.02, relwidth=0.03, relheight=0.96)
+
+        self.mostrar_lista(self.tree_livros, 'livro')
 
 
     def pegar_livro(usuarios, livros, emprestimos):

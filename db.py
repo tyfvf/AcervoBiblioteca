@@ -61,10 +61,24 @@ class Database():
             self.cadastrar_usuario_top_level.destroy()
 
 
-    def mostrar_lista(self, tree):
+    def novo_livro(self):
+        self.nome = self.entry_nome_livro.get()
+
+        if self.nome == '':
+            messagebox.showwarning('Perigo!', 'Você não pode adicionar um livro no banco de dados sem um nome!')
+            self.entry_nome_livro.focus()
+        else:
+            self.connect()
+            self.cursor.execute("""INSERT INTO livros (nome) VALUES (?)""", (self.nome,))
+            self.conn.commit()
+            self.desconnect()
+            self.cadastrar_livro_top_level.destroy()
+
+
+    def mostrar_lista(self, tree, quem):
         tree.delete(*tree.get_children())
         self.connect()
-        data = self.cursor.execute("""SELECT id, nome FROM usuarios ORDER BY nome ASC;""")
+        data = self.cursor.execute("""SELECT id, nome FROM usuarios ORDER BY nome ASC;""") if quem == 'usuario' else self.cursor.execute("""SELECT id, nome, emprestado FROM livros ORDER BY nome ASC;""")
         for i in data:
             tree.insert('', END, values=i)
         self.desconnect()

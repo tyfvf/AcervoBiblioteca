@@ -30,10 +30,10 @@ class App(Menu):
         self.bt_listar_usuario = CTkButton(self.root, text='Listar usuários', font=('Arial', 14), width=250, command=self.listar_usuarios)
         self.bt_listar_usuario.place(relx=0.39, rely=0.3)
 
-        self.bt_cadastro_livro = CTkButton(self.root, text='Cadastrar livro', font=('Arial', 14), width=250)
+        self.bt_cadastro_livro = CTkButton(self.root, text='Cadastrar livro', font=('Arial', 14), width=250, command=self.cadastrar_livro)
         self.bt_cadastro_livro.place(relx=0.39, rely=0.4)
 
-        self.bt_listar_livro = CTkButton(self.root, text='Listar livros', font=('Arial', 14), width=250)
+        self.bt_listar_livro = CTkButton(self.root, text='Listar livros', font=('Arial', 14), width=250, command=self.listar_livros)
         self.bt_listar_livro.place(relx=0.39, rely=0.5)
 
         self.bt_pegar_livro = CTkButton(self.root, text='Pegar livro', font=('Arial', 14), width=250)
