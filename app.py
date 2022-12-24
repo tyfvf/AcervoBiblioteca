@@ -36,10 +36,10 @@ class App(Menu):
         self.bt_listar_livro = CTkButton(self.root, text='Listar livros', font=('Arial', 14), width=250, command=self.listar_livros)
         self.bt_listar_livro.place(relx=0.39, rely=0.5)
 
-        self.bt_pegar_livro = CTkButton(self.root, text='Pegar livro', font=('Arial', 14), width=250)
+        self.bt_pegar_livro = CTkButton(self.root, text='Pegar livro', font=('Arial', 14), width=250, command=self.pegar_livro)
         self.bt_pegar_livro.place(relx=0.39, rely=0.6)
 
-        self.bt_registro_emprestimo = CTkButton(self.root, text='Registro Empréstimos', font=('Arial', 14), width=250)
+        self.bt_registro_emprestimo = CTkButton(self.root, text='Registro de empréstimos', font=('Arial', 14), width=250, command=self.registro_emprestimos)
         self.bt_registro_emprestimo.place(relx=0.39, rely=0.7)
 
         self.bt_devolver_livro = CTkButton(self.root, text='Devolver livro', font=('Arial', 14), width=250)

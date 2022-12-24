@@ -2,9 +2,6 @@ from customtkinter import *
 from tkinter import *
 from tkinter import ttk
 from datetime import datetime
-from usuario import Usuario
-from livro import Livro
-from emprestimo import Emprestimo
 from db import Database
 
 class Menu(Database):
@@ -16,7 +13,7 @@ class Menu(Database):
         self.cadastrar_usuario_top_level.focus_force()
 
         self.lb_nome_usuario = CTkLabel(self.cadastrar_usuario_top_level, text='Nome', font=('Arial', 16))
-        self.lb_nome_usuario.place(relx=0.4, rely=0.1)
+        self.lb_nome_usuario.place(relx=0.15, rely=0.1)
 
         self.entry_nome_usuario = CTkEntry(self.cadastrar_usuario_top_level, font=('Arial', 12))
         self.entry_nome_usuario.place(relx=0.15, rely=0.25)
@@ -38,8 +35,8 @@ class Menu(Database):
         self.tree_usuarios.heading('#2', text='Nome')
 
         self.tree_usuarios.column('#0', width=1, stretch=NO)
-        self.tree_usuarios.column('#1', width=100)
-        self.tree_usuarios.column('#2', width=400)
+        self.tree_usuarios.column('#1', width=5)
+        self.tree_usuarios.column('#2', width=100)
 
         self.tree_usuarios.place(relx=0.02, rely=0.02, relwidth=0.96, relheight=0.96)
 
@@ -47,7 +44,7 @@ class Menu(Database):
         self.tree_usuarios.config(yscrollcommand=self.scroll_usuarios.set)
         self.scroll_usuarios.place(relx=0.96, rely=0.02, relwidth=0.03, relheight=0.96)
 
-        self.mostrar_lista(self.tree_usuarios, 'usuario')
+        self.mostrar_usuarios()
 
 
     def cadastrar_livro(self):
@@ -57,7 +54,7 @@ class Menu(Database):
         self.cadastrar_livro_top_level.focus_force()
 
         self.lb_nome_livro = CTkLabel(self.cadastrar_livro_top_level, text='Nome', font=('Arial', 16))
-        self.lb_nome_livro.place(relx=0.4, rely=0.1)
+        self.lb_nome_livro.place(relx=0.15, rely=0.1)
 
         self.entry_nome_livro = CTkEntry(self.cadastrar_livro_top_level, font=('Arial', 12))
         self.entry_nome_livro.place(relx=0.15, rely=0.25)
@@ -77,7 +74,7 @@ class Menu(Database):
         self.tree_livros.heading('#0', text='')
         self.tree_livros.heading('#1', text='Id')
         self.tree_livros.heading('#2', text='Nome')
-        self.tree_livros.heading('#3', text='Emprestado')
+        self.tree_livros.heading('#3', text='Emprestado?')
 
         self.tree_livros.column('#0', width=1, stretch=NO)
         self.tree_livros.column('#1', width=5)
@@ -90,31 +87,62 @@ class Menu(Database):
         self.tree_livros.config(yscrollcommand=self.scroll_livros.set)
         self.scroll_livros.place(relx=0.96, rely=0.02, relwidth=0.03, relheight=0.96)
 
-        self.mostrar_lista(self.tree_livros, 'livro')
+        self.mostrar_livros()
 
 
-    def pegar_livro(usuarios, livros, emprestimos):
-        id = int(input('Qual o id do usuário que irá pegar? '))
-        if id < 0 or id >= len(usuarios):
-            print('Esse ID não existe')
-        else:
-            id_livro = int(input(f'Bem-vindo {usuarios[id].nome}, qual o id do livro que você quer pegar? '))
-            if id_livro < 0 or id_livro >= len(livros):
-                print('Esse ID não existe')
-            elif livros[id_livro].emprestado:
-                print('Esse livro foi emprestado, por favor aguarde.')
-            else:
-                emprestimos.append(Emprestimo(len(emprestimos), usuarios[id], livros[id_livro], datetime.now()))
-                livros[id_livro].emprestado = True
-                print(f'{usuarios[id].nome} pegou {livros[id_livro].nome} emprestado!')
+    def pegar_livro(self):
+        self.pegar_livro_top_level = CTkToplevel(self.root)
+        self.pegar_livro_top_level.title('Pegar livro')
+        self.pegar_livro_top_level.resizable(False, False)
+        self.pegar_livro_top_level.focus_force()
+
+        self.lb_id_livro = CTkLabel(self.pegar_livro_top_level, text='Id do livro', font=('Arial', 16))
+        self.lb_id_livro.place(relx=0.15, rely=0.1)
+
+        self.entry_id_livro = CTkEntry(self.pegar_livro_top_level, font=('Arial', 12))
+        self.entry_id_livro.place(relx=0.15, rely=0.25)
+
+        self.lb_id_usuario = CTkLabel(self.pegar_livro_top_level, text='Id do usuario', font=('Arial', 16))
+        self.lb_id_usuario.place(relx=0.15, rely=0.5)
+
+        self.entry_id_usuario = CTkEntry(self.pegar_livro_top_level, font=('Arial', 12))
+        self.entry_id_usuario.place(relx=0.15, rely=0.65)
+
+        self.bt_pegar_livro = CTkButton(self.pegar_livro_top_level, text='Pegar', font=('Arial', 12), command=self.novo_emprestimo)
+        self.bt_pegar_livro.place(relx=0.15, rely=0.85)
 
 
-    def registro_emprestimos(emprestimos):
-        if len(emprestimos) == 0:
-            print('Nenhum empréstimo feito')
-        else:
-            for e in emprestimos:
-                print(e)
+    def registro_emprestimos(self):
+        self.registro_emprestimos_top_level = CTkToplevel(self.root)
+        self.registro_emprestimos_top_level.title('Registro de empréstimos')
+        self.registro_emprestimos_top_level.geometry('700x500')
+        self.registro_emprestimos_top_level.resizable(False, False)
+        self.registro_emprestimos_top_level.focus_force()
+
+        self.tree_registro = ttk.Treeview(self.registro_emprestimos_top_level, height=3, columns=('col1', 'col2', 'col3', 'col4', 'col5', 'col6'))
+        self.tree_registro.heading('#0', text='')
+        self.tree_registro.heading('#1', text='Id')
+        self.tree_registro.heading('#2', text='Id do usuario')
+        self.tree_registro.heading('#3', text='Id do livro')
+        self.tree_registro.heading('#4', text='Data de saida')
+        self.tree_registro.heading('#5', text='Data de entrega')
+        self.tree_registro.heading('#6', text='Devolvido?')
+
+        self.tree_registro.column('#0', width=1, stretch=NO)
+        self.tree_registro.column('#1', width=5)
+        self.tree_registro.column('#2', width=5)
+        self.tree_registro.column('#3', width=5)
+        self.tree_registro.column('#4', width=20)
+        self.tree_registro.column('#5', width=20)
+        self.tree_registro.column('#6', width=5)
+
+        self.tree_registro.place(relx=0.02, rely=0.02, relwidth=0.96, relheight=0.96)
+
+        self.scroll_registro = CTkScrollbar(self.registro_emprestimos_top_level, orientation=VERTICAL, command=self.tree_registro.yview)
+        self.tree_registro.config(yscrollcommand=self.scroll_registro.set)
+        self.scroll_registro.place(relx=0.96, rely=0.02, relwidth=0.03, relheight=0.96)
+
+        self.mostrar_emprestimos()
 
 
     def devolver_livro(emprestimos):
