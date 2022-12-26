@@ -175,3 +175,4 @@ class Database():
                 data_formatada[5] = 'Sim'
             self.tree_registro.insert('', END, values=data_formatada)
         self.disconnect()
+        

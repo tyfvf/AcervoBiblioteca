@@ -43,6 +43,3 @@ class App(Menu):
 
         self.bt_devolver_livro = CTkButton(self.root, text='Devolver livro', font=('Arial', 14), width=250, command=self.devolver_livro)
         self.bt_devolver_livro.place(relx=0.39, rely=0.8)
-
-
-App()
