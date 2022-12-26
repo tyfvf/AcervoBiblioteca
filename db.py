@@ -90,7 +90,7 @@ class Database():
             next(data)
             self.disconnect()
         except StopIteration:
-            messagebox.showwarning('Erro!', 'Você não pode fazer um empréstimo sem adicionar um id válido para o usuário ou para o livro (se necessário, consulte a lista de usuários e livros para saber o id)!')
+            messagebox.showwarning('Erro!', 'Você não pode fazer um empréstimo sem adicionar um id válido para usuário e livro (se necessário, consulte a lista de usuários e livros para saber o id)!')
             self.entry_id_livro.focus()
             return
         
@@ -104,6 +104,28 @@ class Database():
             self.conn.commit()
             self.disconnect()
             self.pegar_livro_top_level.destroy()
+
+
+    def devolucao(self):
+        self.id_usuario = self.entry_id_usuario_devolver.get()
+        self.id_livro = self.entry_id_livro_devolver.get()
+
+        try:
+            self.connect()
+            existe = self.cursor.execute("""SELECT id FROM emprestimos WHERE usuario_id = ? AND livro_id = ? AND devolvido = ?""", (self.id_usuario, self.id_livro, False))
+            existe = next(existe)[0]
+            self.disconnect()
+        except StopIteration:
+            messagebox.showwarning('Erro!', 'Você não pode devolver um livro sem adicionar um id válido para usuário e livro (se necessário, consulte a lista de usuários e livros para saber o id)!')
+            self.entry_id_livro_devolver.focus()
+            return
+        
+        self.connect()
+        self.cursor.execute("""UPDATE livros SET emprestado = ? WHERE id = ?""", (False, self.id_livro))
+        self.cursor.execute("""UPDATE emprestimos SET devolvido = ?, data_entrega = ? WHERE id = ?""", (True, datetime.date.today(), existe))
+        self.conn.commit()
+        self.disconnect()
+        self.devolver_livro_top_level.destroy()
 
 
     def mostrar_usuarios(self):
@@ -137,9 +159,19 @@ class Database():
         data_formatada = []
         for i in data:
             data_formatada = list(i)
+            self.connect()
+            data_formatada[1] = next(self.cursor.execute("""SELECT nome FROM usuarios WHERE id = ?""", (data_formatada[1],)))[0]
+            data_formatada[2] = next(self.cursor.execute("""SELECT nome FROM livros WHERE id = ?""", (data_formatada[2],)))[0]
+            self.disconnect()
+            if data_formatada[4] != None:
+                format = data_formatada[4].split('-')
+                data_formatada[4] = f"{format[2]}/{format[1]}/{format[0]}"
+                atrasado = datetime.datetime.strptime(data_formatada[4], "%d/%m/%Y") - datetime.datetime.strptime(data_formatada[3], "%d/%m/%Y")
+                if atrasado.days >= 7:
+                    data_formatada[5] = 'Sim - COM ATRASO'
             if data_formatada[5] == 0:
                 data_formatada[5] = 'Não'
-            else:
+            elif data_formatada[5] == 1:
                 data_formatada[5] = 'Sim'
             self.tree_registro.insert('', END, values=data_formatada)
         self.disconnect()

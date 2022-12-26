@@ -1,7 +1,5 @@
 from customtkinter import *
-from tkinter import *
 from tkinter import ttk
-from datetime import datetime
 from db import Database
 
 class Menu(Database):
@@ -122,8 +120,8 @@ class Menu(Database):
         self.tree_registro = ttk.Treeview(self.registro_emprestimos_top_level, height=3, columns=('col1', 'col2', 'col3', 'col4', 'col5', 'col6'))
         self.tree_registro.heading('#0', text='')
         self.tree_registro.heading('#1', text='Id')
-        self.tree_registro.heading('#2', text='Id do usuario')
-        self.tree_registro.heading('#3', text='Id do livro')
+        self.tree_registro.heading('#2', text='Usuario')
+        self.tree_registro.heading('#3', text='Livro')
         self.tree_registro.heading('#4', text='Data de saida')
         self.tree_registro.heading('#5', text='Data de entrega')
         self.tree_registro.heading('#6', text='Devolvido?')
@@ -145,15 +143,24 @@ class Menu(Database):
         self.mostrar_emprestimos()
 
 
-    def devolver_livro(emprestimos):
-        id_emprestimo = int(input('Qual o id do empréstimo? '))
-        if id_emprestimo < 0 or id_emprestimo >= len(emprestimos):
-            print('Esse ID não existe')
-        elif emprestimos[id_emprestimo].devolvido:
-            print('Esse empréstimo já está quitado')
-        else:
-            emprestimos[id_emprestimo].livro.emprestado = False
-            emprestimos[id_emprestimo].devolvido = True
-            emprestimos[id_emprestimo].data_entrega = datetime.now()
-            print('Livro devolvido com sucesso!')
+    def devolver_livro(self):
+        self.devolver_livro_top_level = CTkToplevel(self.root)
+        self.devolver_livro_top_level.title('Devolver livro')
+        self.devolver_livro_top_level.resizable(False, False)
+        self.devolver_livro_top_level.focus_force()
+
+        self.lb_id_livro_devolver = CTkLabel(self.devolver_livro_top_level, text='Id do livro', font=('Arial', 16))
+        self.lb_id_livro_devolver.place(relx=0.15, rely=0.1)
+
+        self.entry_id_livro_devolver = CTkEntry(self.devolver_livro_top_level, font=('Arial', 12))
+        self.entry_id_livro_devolver.place(relx=0.15, rely=0.25)
+
+        self.lb_id_usuario_devolver = CTkLabel(self.devolver_livro_top_level, text='Id do usuario', font=('Arial', 16))
+        self.lb_id_usuario_devolver.place(relx=0.15, rely=0.5)
+
+        self.entry_id_usuario_devolver = CTkEntry(self.devolver_livro_top_level, font=('Arial', 12))
+        self.entry_id_usuario_devolver.place(relx=0.15, rely=0.65)
+
+        self.bt_devolver_livro = CTkButton(self.devolver_livro_top_level, text='Devolver', font=('Arial', 12), command=self.devolucao)
+        self.bt_devolver_livro.place(relx=0.15, rely=0.85)
             

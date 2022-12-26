@@ -1,6 +1,5 @@
 from customtkinter import *
 from tkinter import *
-from tkinter import ttk
 from menu import Menu
 
 class App(Menu):
@@ -42,7 +41,7 @@ class App(Menu):
         self.bt_registro_emprestimo = CTkButton(self.root, text='Registro de empréstimos', font=('Arial', 14), width=250, command=self.registro_emprestimos)
         self.bt_registro_emprestimo.place(relx=0.39, rely=0.7)
 
-        self.bt_devolver_livro = CTkButton(self.root, text='Devolver livro', font=('Arial', 14), width=250)
+        self.bt_devolver_livro = CTkButton(self.root, text='Devolver livro', font=('Arial', 14), width=250, command=self.devolver_livro)
         self.bt_devolver_livro.place(relx=0.39, rely=0.8)
 
 
